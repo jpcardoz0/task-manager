@@ -22,18 +22,15 @@ export class TaskService {
     }
 
     createTask(task: Task): Promise<Task> {
-        console.log('Tarefa criada')
         return this.taskRepository.save(task)
     }
 
     async updateTask(id: number, task: Partial<Task>): Promise<Task> {
         await this.taskRepository.update(id, task);
-        console.log('Tarefa atualizada')
         return this.findTask(id);
     }
 
     async deleteTask(id: number): Promise<void> {
         await this.taskRepository.delete(id);
-        console.log('Tarefa deletada')
     }
 }

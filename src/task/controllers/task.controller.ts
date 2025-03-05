@@ -7,7 +7,7 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get('users/:userId')
-    getTasks(@Param('userId', ParseIntPipe) userId: number,) {
+    getTasks(@Param('userId', ParseIntPipe) userId: number) {
         return this.taskService.getTasks(userId);
     }
 
@@ -19,13 +19,16 @@ export class TaskController {
         return this.taskService.createTask(userId, body.title, body.desc);
     }
 
-    // @Put(':id')
-    // updateTask(@Param('id') id: number, @Body() task: Partial<Task>) {
-    //     return this.taskService.updateTask(id, task);
-    // }
+    @Put('users/:taskId')
+    updateTask(
+        @Param('taskId', ParseIntPipe) taskId: number,
+        @Body() updateData: Partial<Task>,
+    ) {
+        return this.taskService.updateTask(taskId, updateData);
+    }
 
-    // @Delete(':id')
-    // deleteTask(@Param('id') id: number) {
-    //     return this.taskService.deleteTask(id);
-    // }
+    @Delete('users/:taskId')
+    deleteTask(@Param('taskId', ParseIntPipe) taskId: number) {
+        return this.taskService.deleteTask(taskId);
+    }
 }

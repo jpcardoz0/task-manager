@@ -17,9 +17,6 @@ export class TaskService {
             where: { user: {id: userId}}, 
             relations: ['user'], 
         });
-        if (!task) {
-            throw new Error(`Usuário de id ${userId} não tem tarefas.`)
-        }
         return task;
     }
 
@@ -33,12 +30,16 @@ export class TaskService {
         return this.taskRepository.save(newTask);
     }
 
-    // async updateTask(id: number, task: Partial<Task>): Promise<Task> {
-    //     await this.taskRepository.update(id, task);
-    //     return this.findTask(id);
-    // }
+    async updateTask(taskId: number, updateData: Partial<Task>): Promise<Task> {
+        await this.taskRepository.update(taskId, updateData);
+        const task = await this.taskRepository.findOne({ where: {id: taskId } })
+        if (!task) {
+            throw new NotFoundException('Tarefa não encontrada.');
+        }
+        return task;
+    }
 
-    // async deleteTask(id: number): Promise<void> {
-    //     await this.taskRepository.delete(id);
-    // }
+    async deleteTask(taskId: number): Promise<void> {
+        await this.taskRepository.delete(taskId);
+    }
 }

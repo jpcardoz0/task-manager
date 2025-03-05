@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { TaskService } from '../services/task.service';
 import { Task } from '../task.entity';
 
@@ -6,28 +6,26 @@ import { Task } from '../task.entity';
 export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
-    @Get()
-    findAllTasks() {
-        return this.taskService.findAllTasks();
+    @Get('users/:userId')
+    getTasks(@Param('userId', ParseIntPipe) userId: number,) {
+        return this.taskService.getTasks(userId);
     }
 
-    @Get(':id')
-    findTask(@Param('id') id: number) {
-        return this.taskService.findTask(id);
+    @Post(':userId')
+    async createTask(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Body() body: { title: string, desc: string },
+    ) {
+        return this.taskService.createTask(userId, body.title, body.desc);
     }
 
-    @Post()
-    createTask(@Body() task: Task) {
-        return this.taskService.createTask(task);
-    }
+    // @Put(':id')
+    // updateTask(@Param('id') id: number, @Body() task: Partial<Task>) {
+    //     return this.taskService.updateTask(id, task);
+    // }
 
-    @Put(':id')
-    updateTask(@Param('id') id: number, @Body() task: Partial<Task>) {
-        return this.taskService.updateTask(id, task);
-    }
-
-    @Delete(':id')
-    deleteTask(@Param('id') id: number) {
-        return this.taskService.deleteTask(id);
-    }
+    // @Delete(':id')
+    // deleteTask(@Param('id') id: number) {
+    //     return this.taskService.deleteTask(id);
+    // }
 }

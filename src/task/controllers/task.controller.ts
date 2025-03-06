@@ -6,12 +6,17 @@ import { Task } from '../task.entity';
 export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
-    @Get('users/:userId')
-    getTasks(@Param('userId', ParseIntPipe) userId: number) {
-        return this.taskService.getTasks(userId);
+    @Get('users')
+    getAllTasks() {
+        return this.taskService.getAllTasks();
     }
 
-    @Post(':userId')
+    @Get('users/:userId')
+    getTask(@Param('userId', ParseIntPipe) userId: number) {
+        return this.taskService.getTask(userId);
+    }
+
+    @Post('users/:userId')
     async createTask(
         @Param('userId', ParseIntPipe) userId: number,
         @Body() body: { title: string, desc: string },

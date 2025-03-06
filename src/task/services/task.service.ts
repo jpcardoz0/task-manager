@@ -12,7 +12,12 @@ export class TaskService {
         @InjectRepository(User) private userRepository: Repository<User>,
     ) {}
 
-    async getTasks(userId: number): Promise<Task[]> {
+    async getAllTasks() {
+        const tasks = await this.taskRepository.find();
+        return tasks;
+    }
+
+    async getTask(userId: number): Promise<Task[]> {
         const task = await this.taskRepository.find({
             where: { user: {id: userId}}, 
             relations: ['user'], 

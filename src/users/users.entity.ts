@@ -1,8 +1,9 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { Task } from "src/task/task.entity";
 import * as bcrypt from 'bcrypt';
 
 @Entity()
+@Unique(['username'])
 export class User {
     @PrimaryGeneratedColumn()
     id: number;

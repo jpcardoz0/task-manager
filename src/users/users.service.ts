@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/users.entity';
+import { CreateUserDto } from './dtos/CreateUserDto';
 
 @Injectable()
 export class UsersService {
@@ -29,16 +30,20 @@ export class UsersService {
     }
     
 
-    async createUser(user: User): Promise <User> {
-        const { username } = user;
+    async createUser(createUserDto: CreateUserDto): Promise <User> {
+        const { username, password } = createUserDto;
         const existingUser = await this.userRepository.findOne({ where: { username } });
 
         if(existingUser) {
             throw new ConflictException('Esse nome de usuário já está em uso.');
         }
 
-        const newUser = this.userRepository.create(user);
-        return this.userRepository.save(newUser);
+        const newUser = this.userRepository.create({
+            username, password,
+        });
+
+        await this.userRepository.save(newUser);
+        return newUser;
     }
 
     async updateUser(id: number, user: Partial<User>): Promise<User> {

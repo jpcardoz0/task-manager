@@ -1,6 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe, UsePipes, ValidationPipe } from '@nestjs/common';
 import { TaskService } from './tasks.service';
 import { Task } from 'src/entities/tasks.entity';
+import { CreateTaskDto } from './dtos/CreateTaskDto';
+import { UpdateTaskDto } from './dtos/UpdateTaskDto';
 
 @Controller('tasks')
 export class TaskController {
@@ -17,19 +19,21 @@ export class TaskController {
     }
 
     @Post('users/:userId')
+    @UsePipes(new ValidationPipe())
     async createTask(
         @Param('userId', ParseIntPipe) userId: number,
-        @Body() body: { title: string, desc: string },
+        @Body() createTaskDto: CreateTaskDto,
     ) {
-        return this.taskService.createTask(userId, body.title, body.desc);
+        return this.taskService.createTask(userId, createTaskDto);
     }
 
     @Put('users/:taskId')
-    updateTask(
+    @UsePipes(new ValidationPipe())
+    async updateTask(
         @Param('taskId', ParseIntPipe) taskId: number,
-        @Body() updateData: Partial<Task>,
+        @Body() updateTaskDto: UpdateTaskDto,
     ) {
-        return this.taskService.updateTask(taskId, updateData);
+        return this.taskService.updateTask(taskId, updateTaskDto);
     }
 
     @Delete('users/:taskId')

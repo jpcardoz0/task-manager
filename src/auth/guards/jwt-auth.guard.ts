@@ -23,8 +23,4 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Token inválido ou expirado');
     }
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> d692d47 (commit inicial)

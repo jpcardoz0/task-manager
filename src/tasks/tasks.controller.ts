@@ -1,13 +1,13 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { TaskService } from './tasks.service';
-import { Task } from 'src/entities/tasks.entity';
 import { CreateTaskDto } from './dtos/CreateTaskDto';
 import { UpdateTaskDto } from './dtos/UpdateTaskDto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('tasks')
 export class TaskController {
     constructor(private readonly taskService: TaskService) {}
-
+    
     @Get('users')
     getAllTasks() {
         return this.taskService.getAllTasks();
@@ -18,6 +18,7 @@ export class TaskController {
         return this.taskService.getTask(userId);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Post('users/:userId')
     @UsePipes(new ValidationPipe())
     async createTask(
@@ -27,6 +28,7 @@ export class TaskController {
         return this.taskService.createTask(userId, createTaskDto);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Put('users/:taskId')
     @UsePipes(new ValidationPipe())
     async updateTask(
@@ -36,6 +38,7 @@ export class TaskController {
         return this.taskService.updateTask(taskId, updateTaskDto);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Delete('users/:taskId')
     deleteTask(@Param('taskId', ParseIntPipe) taskId: number) {
         return this.taskService.deleteTask(taskId);
